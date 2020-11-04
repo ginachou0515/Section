@@ -109,54 +109,163 @@
 # 		return area;
 # 	}
 
+def freeway010(mile):
+	if mile >= 0 and mile < 100.8:
+		area = "NFB-NR"
+	elif mile >= 100.8 and mile < 251.1:
+		area = "NFB-CR"
+	elif mile >= 251.1 and mile < 374.32:
+		area = "NFB-SR"
+	return area
 
-day = 8
-def get_sunday():
-    return 'sunday'
+def freeway01A(mile):
+	area = "NFB-NR"
+	return area
 
-def get_monday():
-    return 'monday'
+def freeway01B(mile):
+	area = "NFB-NR"
+	return area
 
-def get_tuesday():
-    return 'tuesday'
+def freeway020(mile):
+	area = "NFB-NR"
+	return area
+
+def freeway030(mile):
+	if mile >= 0 and mile < 110.703:
+		area = "NFB-NR"
+	elif mile >= 110.703 and mile < 270:
+		area = "NFB-CR"
+	elif mile >= 270 and mile < 431.525:
+		area = "NFB-SR"
+	return area
+
+def freeway031(mile):
+	area = "NFB-NR"
+	return area
+
+def primary026(mile):
+	area = "NFB-NR"
+	return area
+
+def road26530F(mile):
+	area = "NFB-NR"
+	return area
+
+def road26529F(mile):
+	area = "NFB-NR"
+	return area
+
+def freeway040(mile):
+	area = "NFB-CR"
+	return area
+
+def freeway050(mile):
+	area = "NFB-PL"
+	return area
+
+def freeway060(mile):
+	area = "NFB-CR"
+	return area
+
+def freeway080(mile):
+	area = "NFB-SR"
+	return area
+
+def freeway100(mile):
+	area = "NFB-SR"
+	return area
+
+def expressway620(mile):
+	area = "NFB-NR"
+	return area
+
+def expressway640(mile):
+	area = "NFB-NR"
+	return area
+
+def expressway660(mile):
+	area = "NFB-NR"
+	return area
+
+def expressway680(mile):
+	area = "NFB-NR"
+	return area
+
+def expressway720(mile):
+	area = "NFB-CR"
+	return area
+
+def expressway740(mile):
+	area = "NFB-CR"
+	return area
+
+def expressway741(mile):
+	area = "NFB-CR"
+	return area
+
+def expressway760(mile):
+	area = "NFB-CR"
+	return area
+
+def expressway780(mile):
+	area = "NFB-CR"
+	return area
+
+def expressway820(mile):
+	area = "NFB-SR"
+	return area
+
+def expressway840(mile):
+	area = "NFB-SR"
+	return area
+
+def expressway860(mile):
+	area = "NFB-SR"
+	return area
+
+def expressway880(mile):
+	area = "NFB-SR"
+	return area
 
 def get_default():
-    return 'unknow'
-
-switcher = {
-    0: get_sunday,
-    1: get_monday,
-    2: get_tuesday
-}
-day_name = switcher.get(day, get_default)()
-print(day_name)
+	return 'unknow'
 
 
-def success(msg):
-    print(msg)
+def notify_author(roadid, mile):
+	switcher = {
+		"000010": freeway010(mile),
+		"00001A": freeway01A(mile),
+		"00001B": freeway01B(mile),
+		"000020": freeway020(mile),
+		"000030": freeway030(mile),
+		"000031": freeway031(mile),
+		"300026": primary026(mile),
+		"626530F": road26530F(mile),
+		"626529F": road26529F(mile),
+		"000040": freeway040(mile),
+		"000050": freeway050(mile),
+		"000060": freeway060(mile),
+		"000080": freeway080(mile),
+		"000100": freeway100(mile),
+		"100620": expressway620(mile),
+		"100640": expressway640(mile),
+		"100660": expressway660(mile),
+		"100680": expressway680(mile),
+		"100720": expressway720(mile),
+		"100740": expressway740(mile),
+		"100741": expressway741(mile),
+		"100760": expressway760(mile),
+		"100780": expressway780(mile),
+		"100820": expressway820(mile),
+		"100840": expressway840(mile),
+		"100860": expressway860(mile),
+		"100880": expressway880(mile)
+	}
+	author = switcher.get(roadid, get_default)
+	return author
 
-def debug(msg):
-    print(msg)
+result = notify_author("000010", 50)
+print(result)
 
-def error(msg):
-    print(msg)
 
-def warning(msg):
-    print(msg)
 
-def other(msg):
-    print(msg)
-
-def notify_result(num, msg):
-    numbers = {
-        0 : success,
-        1 : debug,
-        2 : warning,
-        3 : error
-    }
-
-    method = numbers.get(num, other)
-    if method:
-        method(msg)
-
-    notify_result(0, "success")
