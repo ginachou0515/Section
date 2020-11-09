@@ -119,10 +119,33 @@ if __name__ == "__main__":
             )
         ]
 
-        author = SubAuthority.notify_author(road_id, start_mile)
-        print(f"所屬單位:{author}")
+##仍有些road_id出來的是NONE
+        try:
+            author = SubAuthority.notify_author(road_id, start_mile)
+            print(f"所屬單位:{author}")
+        except :
+            print("未知異常")
         section_new = pd.DataFrame(section_list, columns=col_db)
         section_db = section_db.append(section_new, ignore_index=True)
+
+        print("新增節點")
+        # Element(標籤名):創建標籤節點對象
+        new_node = ET.Element("SubAuthorityCode")
+        # 添加標籤值
+        new_node.text = author
+        print(f"添加標籤值:{author}")
+        # 添加標籤
+        # element.append(new_node)
+        #insert(index, element):在指定位置插入子元素。
+        element.insert(1, new_node)
+
+        # 回寫xml數據
+        tree.write("test2.xml", encoding='utf-8', xml_declaration=True)
+        print(f"新增後XML:{tree}")
+
+    # # 回寫xml數據
+    # tree.write("test2.xml", encoding='utf-8', xml_declaration=True)
+    # print(f"新增後XML:{tree}")
     print(f"解析結果:{section_db}")
 
 

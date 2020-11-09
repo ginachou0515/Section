@@ -126,7 +126,7 @@ def expressway880(mile):
     return "NFB-SR"
 
 
-def get_default():
+def get_default(mile):
     return "unknow"
 
 
@@ -160,7 +160,7 @@ def notify_author(roadid, mile):
         "100860": expressway860(mile),
         "100880": expressway880(mile),
     }
-    author = switcher.get(roadid, get_default)
+    author = switcher.get(roadid, get_default(mile))
     return author
 
 
