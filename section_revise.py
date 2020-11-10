@@ -128,24 +128,29 @@ if __name__ == "__main__":
         section_new = pd.DataFrame(section_list, columns=col_db)
         section_db = section_db.append(section_new, ignore_index=True)
 
-        print("新增節點")
+        # print("新增節點")
         # Element(標籤名):創建標籤節點對象
         new_node = ET.Element("SubAuthorityCode")
         # 添加標籤值
         new_node.text = author
         print(f"添加標籤值:{author}")
-        # 添加標籤
-        # element.append(new_node)
         #insert(index, element):在指定位置插入子元素。
         element.insert(1, new_node)
 
+        # 添加標籤　直接增加在最末端
+        # element.append(new_node)
+        """
+        創建命名空間後，後面創建節點的時候，定義節點標籤，和定義節點標籤屬性的時候，在裡面加入命名名稱值 如【"{命名名稱值}節點標籤名稱"】，這樣會自動將命名名稱值轉換成命名名稱
+        簡單的理解就是，給標籤，標籤屬性，加上一個標示，防止名稱衝突
+        """
+        ET.register_namespace('', "http://ptx.transportdata.tw/standard/schema/TIX")
+        ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
+        ET.register_namespace('schemaLocation', "http://ptx.transportdata.tw/standard/schema")
         # 回寫xml數據
         tree.write("test2.xml", encoding='utf-8', xml_declaration=True)
         print(f"新增後XML:{tree}")
 
-    # # 回寫xml數據
-    # tree.write("test2.xml", encoding='utf-8', xml_declaration=True)
-    # print(f"新增後XML:{tree}")
+    print(f"最終新增的XML:{tree}")
     print(f"解析結果:{section_db}")
 
 

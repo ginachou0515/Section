@@ -8,12 +8,11 @@
 
 
 def freeway010(mile):
-    # global area ##1105
-    if mile >= 0 and mile < 100.8:
+    if mile >= 0 and mile < 100800: ###110.703公里  110703公尺
         return "NFB-NR"
-    elif mile >= 100.8 and mile < 251.1:
+    elif mile >= 100800 and mile < 251100:
         return "NFB-CR"
-    elif mile >= 251.1 and mile < 374.32:
+    elif mile >= 251100: ##and mile < 374320 最尾端可以先刪除
         return "NFB-SR"
 
 
@@ -30,11 +29,11 @@ def freeway020(mile):
 
 
 def freeway030(mile):
-    if mile >= 0 and mile < 110.703:
+    if mile >= 0 and mile < 110703:  ###110.703公里  110703公尺
         return "NFB-NR"
-    elif mile >= 110.703 and mile < 270:
+    elif mile >= 110703 and mile < 270000:
         return "NFB-CR"
-    elif mile >= 270 and mile < 431.525:
+    elif mile >= 270000:  ## and mile < 431525
         return "NFB-SR"
 
 
