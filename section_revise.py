@@ -2,25 +2,17 @@
 # -*- coding: utf-8 -*-
 # @Time : 2020/11/5 上午 09:09
 # @Author : Gina
-# @Site : 
+# @Site :
 # @File : section_revise.py
 # @Software: PyCharm
 
 import xml.etree.ElementTree as ET
 import os
 import pandas as pd
-from decimal import Decimal, ROUND_HALF_UP
 import datetime
-import time
 import SubAuthority
 
-"""
-:param path:目前所在路徑/motc20/type(section)
-:param date:日期名稱(str) %Y%m%d
-:param date:時間段(str) %H%M
-:param xml_name:xml檔案名稱
-:return section_db:vd處理過後的 dataframe資料
-"""
+
 def str_trans_time(time_input, form):
     """
     :param time_input:文字格式的輸入時間
@@ -29,6 +21,7 @@ def str_trans_time(time_input, form):
     """
     time_datetime = datetime.datetime.strptime(time_input, form)  ##文字轉時間格式
     return time_datetime
+
 
 def time_trans_str(time_input, form):
     """
@@ -39,16 +32,18 @@ def time_trans_str(time_input, form):
     time_str = time_input.strftime(form)  ##文字轉時間格式
     return time_str
 
+
 def str_trans_mile(km_str):
     """
     :param km_str:里程(字元) XXXK+XXX
     :return mile:運算後的里程數(INT)
     """
-    mile_str = km_str.split('K+')
+    mile_str = km_str.split("K+")
     km = int(mile_str[0])
     m = int(mile_str[1])
     mile = 1000 * km + m
     return mile
+
 
 if __name__ == "__main__":
     path = os.getcwd()
@@ -62,13 +57,14 @@ if __name__ == "__main__":
     root = tree.getroot()
     print(root)
 
-#http://ptx.transportdata.tw/standard/schema/TIX
-#http://traffic.transportdata.tw/standard/traffic/schema/
+    # http://ptx.transportdata.tw/standard/schema/TIX
+    # http://traffic.transportdata.tw/standard/traffic/schema/
     ns = {"List": "http://ptx.transportdata.tw/standard/schema/TIX"}
     ##http://ptx.transportdata.tw/standard/schema/
     col_db = [
         "db_key",
         "section_id",
+        "author",
         "road_id",
         "time",
         "start_mile",
@@ -90,11 +86,8 @@ if __name__ == "__main__":
         section_id = SectionID.text
         road_id = RoadID.text
         db_key = section_id + "_" + time_trans_str(time, "%Y-%m-%d %H:%M:%S")
-
         print(f"上傳時間:{time}\n路段ID:{section_id}\n道路ID:{road_id}")
 
-        # 用來儲存一個路段的的里程資料
-        # section_startKM = []  ##起始里程 []
         for mile in element.findall(".//List:SectionMile", ns):
             StartKM = mile.find(".//List:StartKM", ns)
             EndKM = mile.find(".//List:EndKM", ns)
@@ -104,37 +97,26 @@ if __name__ == "__main__":
             end_mile = EndKM.text
             end_mile = str_trans_mile(end_mile)
             print(f"起始里程:{start_mile}\n結束里程:{end_mile}")
-            # section_startKM += [
-            #     start_mile
-            # ]  # extend()方法 多項資料加在原來資料的最後，但是必須把這些資料放在一個List資料組
 
-        section_list = [
-            (
-                db_key,
-                section_id,
-                road_id,
-                time,
-                start_mile,
-                end_mile,
-            )
-        ]
-
-##仍有些road_id出來的是NONE
         try:
             author = SubAuthority.notify_author(road_id, start_mile)
             print(f"所屬單位:{author}")
-        except :
+        except:
             print("未知異常")
+
+        section_list = [(db_key, section_id, author, road_id, time, start_mile, end_mile)]
         section_new = pd.DataFrame(section_list, columns=col_db)
         section_db = section_db.append(section_new, ignore_index=True)
+        section_db["section_id"] = section_db["section_id"].astype(str)
+        section_db["road_id"] = section_db["road_id"].astype(str)
 
-        # print("新增節點")
+
         # Element(標籤名):創建標籤節點對象
         new_node = ET.Element("SubAuthorityCode")
         # 添加標籤值
         new_node.text = author
         print(f"添加標籤值:{author}")
-        #insert(index, element):在指定位置插入子元素。
+        # insert(index, element):在指定位置插入子元素。
         element.insert(1, new_node)
 
         # 添加標籤　直接增加在最末端
@@ -143,14 +125,22 @@ if __name__ == "__main__":
         創建命名空間後，後面創建節點的時候，定義節點標籤，和定義節點標籤屬性的時候，在裡面加入命名名稱值 如【"{命名名稱值}節點標籤名稱"】，這樣會自動將命名名稱值轉換成命名名稱
         簡單的理解就是，給標籤，標籤屬性，加上一個標示，防止名稱衝突
         """
-        ET.register_namespace('', "http://ptx.transportdata.tw/standard/schema/TIX")
-        ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
-        ET.register_namespace('schemaLocation', "http://ptx.transportdata.tw/standard/schema")
+        ET.register_namespace("", "http://ptx.transportdata.tw/standard/schema/TIX")
+        ET.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
+        ET.register_namespace(
+            "schemaLocation", "http://ptx.transportdata.tw/standard/schema"
+        )
         # 回寫xml數據
-        tree.write("test2.xml", encoding='utf-8', xml_declaration=True)
+        tree.write("NewSection.xml", encoding="utf-8", xml_declaration=True)
         print(f"新增後XML:{tree}")
 
     print(f"最終新增的XML:{tree}")
     print(f"解析結果:{section_db}")
 
-
+##無法解開啟EXCEL時，將section_id和road_id以數值類型讀取
+    output_name = "ReviseSection.xlsx"
+    outputpath = os.path.join(path, output_name)
+    section_db.to_excel(outputpath, index=False)
+    # output_name = "ReviseSection.csv"
+    # outputpath = os.path.join(path, output_name)
+    # section_db.to_csv(outputpath, index=False)

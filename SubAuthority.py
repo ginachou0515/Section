@@ -44,6 +44,9 @@ def freeway031(mile):
 def primary026(mile):
     return "NFB-NR"
 
+def primary741(mile):
+    return "NFB-CR"
+
 
 def road26530F(mile):
     return "NFB-NR"
@@ -138,8 +141,9 @@ def notify_author(roadid, mile):
         "000030": freeway030(mile),
         "000031": freeway031(mile),
         "300026": primary026(mile),
-        "626530F": road26530F(mile),
-        "626529F": road26529F(mile),
+        "300741": primary741(mile),
+        "626530": road26530F(mile),  ##626530F
+        "626529": road26529F(mile),  ##626529F
         "000040": freeway040(mile),
         "000050": freeway050(mile),
         "000060": freeway060(mile),
