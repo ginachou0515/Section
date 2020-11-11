@@ -55,12 +55,20 @@ if __name__ == "__main__":
 
     tree = ET.parse(file_name)
     root = tree.getroot()
-    print(root)
 
-    # http://ptx.transportdata.tw/standard/schema/TIX
-    # http://traffic.transportdata.tw/standard/traffic/schema/
-    ns = {"List": "http://ptx.transportdata.tw/standard/schema/TIX"}
-    ##http://ptx.transportdata.tw/standard/schema/
+    """
+    創建命名空間後，後面創建節點的時候，定義節點標籤，和定義節點標籤屬性的時候，在裡面加入命名名稱值 如【"{命名名稱值}節點標籤名稱"】，這樣會自動將命名名稱值轉換成命名名稱
+    簡單的理解就是，給標籤，標籤屬性，加上一個標示，防止名稱衝突
+    """
+    ET.register_namespace("", "http://ptx.transportdata.tw/standard/schema/TIX")
+    ET.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
+    ET.register_namespace(
+        "schemaLocation", "http://ptx.transportdata.tw/standard/schema"
+    )
+    ns = {"List": "http://ptx.transportdata.tw/standard/schema/TIX",
+          "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+          "schemaLocation": "http://ptx.transportdata.tw/standard/schema"}
+
     col_db = [
         "db_key",
         "section_id",
@@ -121,15 +129,15 @@ if __name__ == "__main__":
 
         # 添加標籤　直接增加在最末端
         # element.append(new_node)
-        """
-        創建命名空間後，後面創建節點的時候，定義節點標籤，和定義節點標籤屬性的時候，在裡面加入命名名稱值 如【"{命名名稱值}節點標籤名稱"】，這樣會自動將命名名稱值轉換成命名名稱
-        簡單的理解就是，給標籤，標籤屬性，加上一個標示，防止名稱衝突
-        """
-        ET.register_namespace("", "http://ptx.transportdata.tw/standard/schema/TIX")
-        ET.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
-        ET.register_namespace(
-            "schemaLocation", "http://ptx.transportdata.tw/standard/schema"
-        )
+        # """
+        # 創建命名空間後，後面創建節點的時候，定義節點標籤，和定義節點標籤屬性的時候，在裡面加入命名名稱值 如【"{命名名稱值}節點標籤名稱"】，這樣會自動將命名名稱值轉換成命名名稱
+        # 簡單的理解就是，給標籤，標籤屬性，加上一個標示，防止名稱衝突
+        # """
+        # ET.register_namespace("", "http://ptx.transportdata.tw/standard/schema/TIX")
+        # ET.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
+        # ET.register_namespace(
+        #     "schemaLocation", "http://ptx.transportdata.tw/standard/schema"
+        # )
         # 回寫xml數據
         tree.write("NewSection.xml", encoding="utf-8", xml_declaration=True)
         print(f"新增後XML:{tree}")
@@ -141,6 +149,3 @@ if __name__ == "__main__":
     output_name = "ReviseSection.xlsx"
     outputpath = os.path.join(path, output_name)
     section_db.to_excel(outputpath, index=False)
-    # output_name = "ReviseSection.csv"
-    # outputpath = os.path.join(path, output_name)
-    # section_db.to_csv(outputpath, index=False)
