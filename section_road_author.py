@@ -95,6 +95,7 @@ def section_find_author(path, xml_name):
 
 if __name__ == "__main__":
     path = os.getcwd()
+    ##DEF內文
     DIR_ROOT = os.path.join(path)
     # xml_name = "SectionLinkList.xml"
     xml_name = "SectionShapeList.xml"
@@ -102,7 +103,6 @@ if __name__ == "__main__":
         os.makedirs(DIR_ROOT)
     file_name = os.path.join(DIR_ROOT, xml_name)
 
-    ##DEF內文
     tree = ET.parse(file_name)
     root = tree.getroot()
     ##讀取Section根據RoadId判斷的所屬機關輸出檔
